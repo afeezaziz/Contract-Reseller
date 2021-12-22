@@ -55,6 +55,10 @@ contract Reseller {
         uint256 _amount
     );
 
+    event CoinWithdrawn(
+        uint256 _amount
+    );    
+
     modifier onlyOwner {
       require(msg.sender == owner);
       _;
@@ -134,6 +138,13 @@ contract Reseller {
     function depositIntoContract() public payable onlyOwner {
         console.log("Coin deposited: '%s'.", msg.value);
         emit CoinDeposited(msg.value);
+    }
+
+    function withdrawFromContract(uint256 _withdrawalAmount) public onlyOwner {
+        address payable ownerAddress = payable(owner);
+        ownerAddress.transfer(_withdrawalAmount);
+        console.log("Coin withdrawn: '%s'.", _withdrawalAmount);
+        emit CoinWithdrawn(_withdrawalAmount);
     }
 
     function getSeller(uint256 _sellerID) public view returns (
